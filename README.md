@@ -7,7 +7,10 @@
 
 ## 安装
 
-[下载最新的安装包](https://github.com/VernonVan/PPImportArrangerExtension/releases/download/1.0/PPImportArrangerExtension.app.zip)并解压，双击解压出的 PPImportArrangerExtension.app 文件，然后到 系统偏好设置-> 扩展 -> Xcode Source Editor Extension 勾选该插件，重启 Xcode 即可在菜单栏 Editor->ImportArranger-> Arrange Imports 格式化 #import 了。
+1. [下载最新的安装包](https://github.com/VernonVan/PPImportArrangerExtension/releases/download/1.0/PPImportArrangerExtension.app.zip)并解压
+2. 双击解压出的 PPImportArrangerExtension.app 文件
+3. 系统偏好设置-> 扩展 -> Xcode Source Editor Extension 勾选该插件
+4. 重启 Xcode
 
 ![勾选插件](http://upload-images.jianshu.io/upload_images/698554-b35bafce22cccf86.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
