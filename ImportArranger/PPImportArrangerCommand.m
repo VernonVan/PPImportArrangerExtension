@@ -8,18 +8,31 @@
 
 #import "PPImportArrangerCommand.h"
 
+#define ArrangeActiveFile    @"ArrangeActiveFile"
+#define ArrangeSelectedLines @"ArrangeSelectedLines"
+
 @implementation PPImportArrangerCommand
 
 - (void)performCommandWithInvocation:(XCSourceEditorCommandInvocation *)invocation completionHandler:(void (^)(NSError *_Nullable nilOrError))completionHandler
 {
-    NSMutableArray<NSString *> *lines = invocation.buffer.lines;
+    NSArray<NSString *> *lines = nil;
+    NSInteger firstLine = -1;
+    if ([invocation.commandIdentifier hasSuffix:ArrangeSelectedLines]) {
+        XCSourceTextRange *textRange = invocation.buffer.selections.firstObject;
+        NSRange selectedLineRange = NSMakeRange(textRange.start.line, textRange.end.line - textRange.start.line + 1);
+        lines = [invocation.buffer.lines subarrayWithRange:selectedLineRange];
+        firstLine = textRange.start.line;
+    } else {
+        lines = invocation.buffer.lines;
+    }
+    
     if (!lines || !lines.count) {
         completionHandler(nil);
         return;
     }
 
     NSMutableArray<NSString *> *importLines = [[NSMutableArray alloc] init];
-    NSInteger firstLine = -1;
+    
     for (NSUInteger index = 0, max = lines.count; index < max; index++) {
         NSString *line = lines[index];
         NSString *pureLine = [line stringByReplacingOccurrencesOfString:@" " withString:@""];       // 去掉多余的空格，以防被空格干扰没检测到 #import
@@ -30,6 +43,7 @@
             if (firstLine == -1) {
                 firstLine = index;      // 记住第一行 #import 所在的行数，用来等下重新插入的位置
             }
+        } else if ([pureLine hasPrefix:@"@implementation"]) {
         }
     }
 
