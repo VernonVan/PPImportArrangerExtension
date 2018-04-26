@@ -38,9 +38,23 @@
         return;
     }
 
+    // 先从源文件中移除所有 import 的行
     [invocation.buffer.lines removeObjectsInArray:importLines];
+    NSMutableArray<NSString *> *sortedImportLines = [self sortImportLines:importLines];
 
-    NSArray *noRepeatArray = [[NSSet setWithArray:importLines] allObjects];         // 去掉重复的 #import
+    if (firstLine >= 0 && firstLine < invocation.buffer.lines.count) {
+        // 重新插入排好序的 #import 行
+        [invocation.buffer.lines insertObjects:sortedImportLines atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(firstLine, sortedImportLines.count)]];
+        // 选中所有 #import 行
+        [invocation.buffer.selections addObject:[[XCSourceTextRange alloc] initWithStart:XCSourceTextPositionMake(firstLine, 0) end:XCSourceTextPositionMake(firstLine + sortedImportLines.count, sortedImportLines.lastObject.length)]];
+    }
+
+    completionHandler(nil);
+}
+
+- (NSMutableArray<NSString *> *)sortImportLines:(NSMutableArray<NSString *> *)importLines
+{
+    NSArray *noRepeatArray = [[NSSet setWithArray:importLines] allObjects];  // 去掉重复的 #import
     NSMutableArray<NSString *> *sortedImports = [[NSMutableArray alloc] initWithArray:[noRepeatArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
 
     // 引用系统文件在前，用户自定义的文件在后
@@ -55,14 +69,7 @@
         [sortedImports insertObjects:systemImports atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, systemImports.count)]];
     }
 
-    if (firstLine >= 0 && firstLine < invocation.buffer.lines.count) {
-        // 重新插入排好序的 #import 行
-        [invocation.buffer.lines insertObjects:sortedImports atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(firstLine, sortedImports.count)]];
-        // 选中所有 #import 行
-        [invocation.buffer.selections addObject:[[XCSourceTextRange alloc] initWithStart:XCSourceTextPositionMake(firstLine, 0) end:XCSourceTextPositionMake(firstLine + sortedImports.count, sortedImports.lastObject.length)]];
-    }
-
-    completionHandler(nil);
+    return sortedImports;
 }
 
 @end
