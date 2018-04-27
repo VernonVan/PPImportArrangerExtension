@@ -7,7 +7,7 @@
 
 ## 安装
 
-1. [下载最新的安装包](https://github.com/VernonVan/PPImportArrangerExtension/releases/download/1.0/PPImportArrangerExtension.app.zip)并解压，将解压出的 PPImportArrangerExtension.app 文件拖到应用程序（Applications）文件夹中，
+1. [下载最新的安装包](hhttps://github.com/VernonVan/PPImportArrangerExtension/releases/download/1.1/PPImportArrangerExtension.zip)并解压，将解压出的 PPImportArrangerExtension.app 文件拖到应用程序（Applications）文件夹中，
 2. 双击 PPImportArrangerExtension 程序
 3. 系统偏好设置-> 扩展 -> Xcode Source Editor Extension 勾选该插件
 4. 重启 Xcode
